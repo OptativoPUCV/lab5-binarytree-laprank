@@ -79,47 +79,27 @@ TreeNode * minimum(TreeNode * x){
 
 
 void removeNode(TreeMap * tree, TreeNode* node) {
-    if (tree == NULL || node == NULL) {
+    if (tree == NULL || node == NULL) return;
+    if (node->left == NULL && node->right == NULL){
+        if (node == node->parent->left) node->parent->left = NULL;
+        else node->parent->right = NULL;
+        free(node);
         return;
     }
-
-    if (tree->root == node) {
-        free(node);
-        tree->root = NULL;
-    } 
-    else{
-        TreeNode * parent = node->parent;
-        if (node->left == NULL && node->right == NULL){
-            if (tree->lower_than(node->pair->key, parent->pair->key) == 1) parent->left = NULL;
-            else parent->right = NULL;
-            free(node);
-        }
-        else{
-            if (node->left != NULL && node->right != NULL){
-                TreeNode * min = minimum(node->right);
-                node->pair->key = min->pair->key;
-                node->pair->value = min->pair->value;
-                removeNode(tree, min);
-            }
-            else{
-                TreeNode * child = (node->left != NULL)? node->left: node->right;
-                if (tree->lower_than(node->pair->key, parent->pair->key) == 1) parent->left = child;
-                else parent->right = child;
-                child->parent = parent;
-                free(node);
-            }
-        }
+    if (node->left != NULL && node->right != NULL){
+        TreeNode * aux = minimum(node->right);
+        node->pair->key = aux->pair->key;
+        node->pair->value = aux->pair->value;
+        removeNode(tree, aux);
+        return;
     }
-}
-
-
-void eraseTreeMap(TreeMap * tree, void* key){
-    if (tree == NULL || tree->root == NULL) return;
-
-    if (searchTreeMap(tree, key) == NULL) return;
-    TreeNode* node = tree->current;
-    removeNode(tree, node);
-
+    TreeNode * child;
+    if (node->left != NULL) child = node->left;
+    else child = node->right;
+    child->parent = node->parent;
+    if (node == node->parent->left) node->parent->left = child;
+    else node->parent->right = child;
+    free(node);
 }
 
 
