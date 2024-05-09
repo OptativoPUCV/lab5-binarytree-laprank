@@ -79,49 +79,7 @@ TreeNode * minimum(TreeNode * x){
 
 
 void removeNode(TreeMap * tree, TreeNode* node) {
-    if (tree == NULL || node == NULL) 
-        return;
-
-    if (node->left == NULL && node->right == NULL) {
-        if (node->parent != NULL) {
-            if (node == node->parent->left) 
-                node->parent->left = NULL;
-            else 
-                node->parent->right = NULL;
-        } else {
-            // Node is root
-            tree->root = NULL;
-        }
-        free(node->pair->key);
-        free(node->pair->value);
-        free(node->pair);
-        free(node);
-    } else if (node->right != NULL) {
-        TreeNode * min = minimum(node->right);
-        node->pair->key = min->pair->key;
-        node->pair->value = min->pair->value;
-        removeNode(tree, min);
-    } else {
-        // Node has only left child
-        TreeNode * aux = node->parent;
-        if (aux != NULL) {
-            if (node == aux->left) 
-                aux->left = node->left;
-            else 
-                aux->right = node->left;
-            if (node->left != NULL)
-                node->left->parent = aux;
-        } else {
-            // Node is root
-            tree->root = node->left;
-            if (node->left != NULL)
-                node->left->parent = NULL;
-        }
-        free(node->pair->key);
-        free(node->pair->value);
-        free(node->pair);
-        free(node);
-    }
+    
 }
 
 void eraseTreeMap(TreeMap * tree, void* key){
